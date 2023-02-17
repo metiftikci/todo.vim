@@ -1,6 +1,6 @@
 " todo.vim - Todo
 " Author:    metiftikci
-" Version:   1.0
+" Version:   1.1
 
 if exists('g:loaded_todo')
   exit
@@ -20,8 +20,8 @@ function! s:hasCreatedTag(line_text)
   return a:line_text !~ ' @created(\d\d/\d\d)'
 endfunction
 
-function! s:hasUpdatedTag(line_text)
-  return a:line_text !~ ' @updated(\d\d/\d\d)'
+function! s:hasDoneTag(line_text)
+  return a:line_text !~ ' @done(\d\d/\d\d)'
 endfunction
 
 function! s:generateCreatedTag(line_text)
@@ -29,9 +29,9 @@ function! s:generateCreatedTag(line_text)
   return a:line_text . ' @created(' . today . ')'
 endfunction
 
-function! s:generateUpdatedTag(line_text)
+function! s:generateDoneTag(line_text)
   let today = strftime('%m/%d')
-  return a:line_text . ' @updated(' . today . ')'
+  return a:line_text . ' @done(' . today . ')'
 endfunction
 
 function! AddCreateTag()
@@ -45,22 +45,22 @@ function! AddCreateTag()
   endif
 endfunction
 
-function! AddRemoveUpdateTag()
+function! AddRemoveDoneTag()
   let line_num = line('.')
   let line_text = getline(line_num)
   if s:isDoneTodoLine(line_text)
-    if s:hasUpdatedTag(line_text)
-      let updated_text = s:generateUpdatedTag(line_text)
-      call setline(line_num, updated_text)
+    if s:hasDoneTag(line_text)
+      let done_text = s:generateDoneTag(line_text)
+      call setline(line_num, done_text)
     endif
   elseif s:isNotDoneTodoLine(line_text)
-    let updated_text = substitute(line_text, '\s\?@updated(\d\d/\d\d)', '', 'g')
-    call setline(line_num, updated_text)
+    let done_text = substitute(line_text, '\s\?@done(\d\d/\d\d)', '', 'g')
+    call setline(line_num, done_text)
   endif
 endfunction
 
 augroup TODO
   autocmd!
   autocmd TextChanged,TextChangedI TODO.md call AddCreateTag()
-  autocmd TextChanged,TextChangedI TODO.md call AddRemoveUpdateTag()
+  autocmd TextChanged,TextChangedI TODO.md call AddRemoveDoneTag()
 augroup end

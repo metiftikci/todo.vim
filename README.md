@@ -2,7 +2,7 @@
 
 1. Create `TODO.md` file
 2. When you write `- [ ] ` **todo.vim** adds ` @created(mm/dd)` to end of the line
-3. When you write `- [x] ` **todo.vim** adds ` @updated(mm/dd)` to end of the line
+3. When you write `- [x] ` **todo.vim** adds ` @done(mm/dd)` to end of the line
 
 ## Install
 
