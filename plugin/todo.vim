@@ -34,7 +34,17 @@ function! s:generateDoneTag(line_text)
   return a:line_text . ' @done(' . today . ')'
 endfunction
 
+function! s:isEdited()
+  let undotree = undotree()
+  let tipOfUndoTree = undotree.seq_last == undotree.seq_cur
+  return &modifiable && &modified && tipOfUndoTree
+endfunction
+
 function! AddCreateTag()
+  if !s:isEdited()
+    return
+  endif
+
   let line_num = line('.')
   let line_text = getline(line_num)
   if s:isDoneTodoLine(line_text) || s:isNotDoneTodoLine(line_text)
@@ -46,6 +56,10 @@ function! AddCreateTag()
 endfunction
 
 function! AddRemoveDoneTag()
+  if !s:isEdited()
+    return
+  endif
+
   let line_num = line('.')
   let line_text = getline(line_num)
   if s:isDoneTodoLine(line_text)
